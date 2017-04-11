@@ -34,7 +34,7 @@ function pollAndNotify(){
 				Slack.notify(a, pendings[a], function(err, done){});
 			});
 
-			setTimeout(pollAndNotify, interval * 60 * 1000 * 1000);
+			setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
 		}
 	});
 }
