@@ -1,13 +1,13 @@
 {
-  "name": "githubpullrequests-slack-reminder",
+  "name": "github-slack-reminder",
   "version": "1.0.0",
-  "description": "",
+  "description": " A github pull requests reviews reminder",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "ahmadposten",
+  "license": "BSD3",
   "dependencies": {
     "bunyan": "^1.8.1",
     "bunyan-loggly": "^1.0.0",
