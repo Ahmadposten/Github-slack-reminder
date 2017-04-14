@@ -7,14 +7,19 @@ var SLACK_BOT_TOKEN = process.env['SLACK_TOKEN'];
 var CONFIG_PATH     = process.env['CONFIG_PATH'] || './';
 var regex			= new RegExp(process.env['REPOS_REGEX'] || '.*');
 var interval		= parseFloat(process.env['INTERVAL']) || 2;
-var organization    = process.env['ORGANIZATION'];
+var organizations   = process.env['ORGANIZATIONS'];
+var personal		= process.env['PERSONAL'];
+
+personal = personal && personal.toLowerCase() === 'true' ? true : false;
+organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
 
 var slackGithubUsersMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
 
 const Github   = new (require('./lib/github'))({
 	token: GITHUB_TOKEN,
 	regex: regex,
-	organization: organization
+	organizations: organizations,
+	personal: personal
 }, Log)
 
 const Slack    = new(require('./lib/slack'))({
@@ -25,10 +30,9 @@ const Slack    = new(require('./lib/slack'))({
 
 
 function pollAndNotify(){
-	Log.info("Interval ", interval)
 	Github.getAllPending(function(err, pendings){
 		if(err)
-			log.Error("Error ", err);
+			Log.error("Error ", err);
 		else{
 			Object.keys(pendings).map(function(a){
 				Slack.notify(a, pendings[a], function(err, done){});
