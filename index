@@ -4,6 +4,19 @@ const Log       = require('./lib/logging');
 
 var GITHUB_TOKEN    = process.env['GITHUB_TOKEN'];
 var SLACK_BOT_TOKEN = process.env['SLACK_TOKEN'];
+
+// Validations
+
+if(!GITHUB_TOKEN || GITHUB_TOKEN.length == 0){
+  Log.error("GITHUB_TOKEN environment variable is not set")
+  process.exit()
+}
+
+if(!SLACK_BOT_TOKEN || SLACK_BOT_TOKEN.length == 0){
+  Log.error("SLACK_BOT_TOKEN environment variable is not set")
+  process.exit()
+}
+
 var CONFIG_PATH     = process.env['CONFIG_PATH'] || './';
 var regex			= new RegExp(process.env['REPOS_REGEX'] || '.*');
 var interval		= parseFloat(process.env['INTERVAL']) || 2;
