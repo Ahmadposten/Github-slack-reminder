@@ -14,10 +14,11 @@ node index.js
 
 ## Configurable parameters
 parameters are configured via environment variables.
+
 | Environment variable                               | Description                                                                                    | Possible values      |
 | ---------------------------------------------------| ---------------------------------------------------------------------------------------------- | -------------------- |
-| GITHUB_TOKEN<span style="color:red">\*</span>      | The github token (required)                                                                    | String               |
-| SLACK_TOKEN<span style="color:red">\*</span>       | Slack token for a bot you have (required)                                                      | String               |
+| GITHUB_TOKEN <span style="color:red">\*</span>      | The github token (required)                                                                    | String               |
+| SLACK_TOKEN <span style="color:red">\*</span>       | Slack token for a bot you have (required)                                                      | String               |
 | Interval                                           | The interval between to reminders in hours, defaults to 2                                      | Double               |
 | REPOS_REGEX                                        | Regex expression to watch only repos that match this expression      dafaults to `*`           | String               |
 | ORGANIZATIONS                                      | A comma seperated strings of organizations you want to watch         defaults to empty string  | String               |
