@@ -9,7 +9,7 @@ This little application monitors github repos for new pull requests and sends re
 git clone https://github.com/Ahmadposten/Github-slack-reminder.git
 cd Github-slack-reminder
 npm install
-node index.js
+node index
 ```
 
 ## Configurable parameters
