@@ -27,6 +27,7 @@ personal = personal && personal.toLowerCase() === 'true' ? true : false;
 organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
 
 var slackGithubUsersMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
+var slackIdUsernameMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'users.json')));
 
 const Github   = new (require('./lib/github'))({
     token: GITHUB_TOKEN,
@@ -42,18 +43,35 @@ const Slack    = new(require('./lib/slack'))({
 
 
 
-function pollAndNotify(){
-    Github.getAllPending(function(err, pendings){
-        if(err)
-            Log.error("Error ", err);
-        else{
-            Object.keys(pendings).map(function(a){
-                Slack.notify(a, pendings[a], function(err, done){});
-            });
+// function pollAndNotify(){
+//     Github.getAllPending(function(err, pendings){
+//         if(err)
+//             Log.error("Error ", err);
+//         else{
+//             Object.keys(pendings).map(function(a){
+//                 Slack.notify(a, pendings[a], function(err, done){});
+//             });
 
-            setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
-        }
-    });
+//             setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
+//         }
+//     });
+// }
+
+// pollAndNotify()
+
+
+module.exports = {
+    repeat: function(username) {
+        console.log(username);
+
+        // Github.getAllPending(function(err, pendings) {
+        //     if(err)
+        //         Log.error("Error ", err);
+        //     else{
+        //         Object.keys(pendings).map(function(a){
+        //             Slack.notify(a, pendings[a], function(err, done){});
+        //         });
+        //     }
+        // });
+    }
 }
-
-pollAndNotify()
