@@ -51,11 +51,11 @@ function pollAndNotify(){
         if(err)
             Log.error("Error ", err);
         else{
-            Object.keys(pendings).map(function(a){
-                Slack.notify(a, pendings[a], function(err, done){});
-            });
             // Only execute the poller when it's during working hours
-            if (hours > workStart && hours < workEnd && (day != 'Sat' || 'Sun')) {
+            if (hours > workStart && hours < workEnd && day != 0 && day != 6) {
+                    Object.keys(pendings).map(function(a){
+                        Slack.notify(a, pendings[a], function(err, done){});
+                    });             
                 setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
             } else {
                 console.log('All work and no play makes Jack a dull boy.');
@@ -63,3 +63,5 @@ function pollAndNotify(){
         }
     });
 }
+
+pollAndNotify();
