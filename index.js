@@ -1,6 +1,7 @@
 const Fs        = require('fs')
 const Path      = require('path')
 const Log       = require('./lib/logging');
+const moment    = require('moment')
 
 var GITHUB_TOKEN    = process.env['GITHUB_TOKEN'];
 var SLACK_BOT_TOKEN = process.env['REMINDER_TOKEN'];
@@ -22,6 +23,8 @@ var regex           = new RegExp(process.env['REPOS_REGEX'] || '.*');
 var interval        = parseFloat(process.env['INTERVAL']) || 2;
 var organizations   = process.env['ORGANIZATIONS'];
 var personal        = process.env['PERSONAL'];
+var workStart       = 10; // Start of the workday in hours
+var workEnd         = 18; // End of workday
 
 personal = personal && personal.toLowerCase() === 'true' ? true : false;
 organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
@@ -40,9 +43,11 @@ const Slack    = new(require('./lib/slack'))({
     mappings: slackGithubUsersMappings
 }, Log)
 
-
-
 function pollAndNotify(){
+    var now = new Date();
+    var hours = now.getHours();
+    var day = now.getDay();
+
     Github.getAllPending(function(err, pendings){
         if(err)
             Log.error("Error ", err);
@@ -50,10 +55,12 @@ function pollAndNotify(){
             Object.keys(pendings).map(function(a){
                 Slack.notify(a, pendings[a], function(err, done){});
             });
-
-            setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
+            // Only execute the poller when it's during working hours
+            if (hours > workStart && hours < workEnd && (day != 'Sat' || 'Sun')) {
+                setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
+            } else {
+                console.log('All work and no play makes Jack a dull boy.');
+            }
         }
     });
 }
-
-pollAndNotify()
