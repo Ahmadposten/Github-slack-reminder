@@ -45,20 +45,21 @@ const Slack    = new(require('./lib/slack'))({
 
 module.exports = {
     repeat: function(slackId, githubUser) {
-        var self = this;
-        var users = this.mappings[slackId] || null;
-        console.log('wat', slackId, users);
+          var self = this;
+        // var users = this.mappings[slackId] || null;
+        // console.log('wat', slackId, users);
+        console.log(Github);
 
-        Github.getAllPending(function(err, pendings) {
-            if (err)
-                Log.error("Error ", err);
-            else {
-                console.log(pendings);
-                Object.keys(pendings).map(function(a){
-                    console.log(a, pendings[a], function(err, done){});
-                });
-            }
-        });
+        // Github.getAllPending(function(err, pendings) {
+        //     if (err)
+        //         Log.error("Error ", err);
+        //     else {
+        //      console.log(pendings);
+        //         Object.keys(pendings).map(function(a){
+        //             console.log(a, pendings[a], function(err, done){});
+        //         });
+        //     }
+        // });
     }
 }
 
