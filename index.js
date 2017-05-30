@@ -1,7 +1,6 @@
 const Fs        = require('fs')
 const Path      = require('path')
 const Log       = require('./lib/logging');
-const moment    = require('moment')
 
 var GITHUB_TOKEN    = process.env['GITHUB_TOKEN'];
 var SLACK_BOT_TOKEN = process.env['REMINDER_TOKEN'];
