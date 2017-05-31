@@ -46,42 +46,41 @@ const Slack    = new(require('./lib/slack'))({
 
 module.exports = {
     repeat: function(slackId) {
+        const noneMsg = 'There are no PRs pending your review.'
         var targetUser = Github.mappings[slackId] || null;
-        console.log('wat', slackId, targetUser);
 
         Github.getAllPending(function(err, pendings) {
             if (err)
                 Log.error("Error ", err);
-            else {
-                console.log(pendings);
-                // Object.keys(pendings).map(function(a){
-                //     console.log(a, pendings[a], function(err, done){});
-                // });
+            else if (pendings[targetUser]) {
+                Slack.notify(targetUser, pendings[targetUser], function(err, done){});
+            } else {
+                Slack.sendMsg(targetUser, noneMsg);
             }
         });
     }
 }
 
-// function pollAndNotify(){
-//     var now = new Date();
-//     var hours = now.getHours();
-//     var day = now.getDay();
+function pollAndNotify(){
+    var now = new Date();
+    var hours = now.getHours();
+    var day = now.getDay();
 
-//     Github.getAllPending(function(err, pendings){
-//         if(err)
-//             Log.error("Error ", err);
-//         else{
-//             // Only execute the poller when it's during working hours
-//             if (hours > workStart && hours < workEnd && day != 0 && day != 6) {
-//                     Object.keys(pendings).map(function(a){
-//                         Slack.notify(a, pendings[a], function(err, done){});
-//                     });             
-//                 setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
-//             } else {
-//                 console.log('All work and no play makes Jack a dull boy.');
-//             }
-//         }
-//     });
-// }
+    Github.getAllPending(function(err, pendings){
+        if(err)
+            Log.error("Error ", err);
+        else{
+            // Only execute the poller when it's during working hours
+            if (hours > workStart && hours < workEnd && day != 0 && day != 6) {
+                    Object.keys(pendings).map(function(a){
+                        Slack.notify(a, pendings[a], function(err, done){});
+                    });             
+                setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
+            } else {
+                console.log('All work and no play makes Jack a dull boy.');
+            }
+        }
+    });
+}
 
-// pollAndNotify();
+pollAndNotify();
