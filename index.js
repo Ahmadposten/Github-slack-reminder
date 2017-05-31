@@ -35,6 +35,7 @@ const Github   = new (require('./lib/github'))({
     token: GITHUB_TOKEN,
     regex: regex,
     organizations: organizations,
+    mappings: slackIdUsernameMappings,
     personal: personal
 }, Log)
 
@@ -52,7 +53,7 @@ module.exports = {
             if (err)
                 Log.error("Error ", err);
             else {
-                console.log(pendings['rjdabbar'][0]);
+                console.log(pendings);
                 // Object.keys(pendings).map(function(a){
                 //     console.log(a, pendings[a], function(err, done){});
                 // });
