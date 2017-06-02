@@ -29,11 +29,13 @@ personal = personal && personal.toLowerCase() === 'true' ? true : false;
 organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
 
 var slackGithubUsersMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
+var slackIdUsernameMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'users.json')));
 
 const Github   = new (require('./lib/github'))({
     token: GITHUB_TOKEN,
     regex: regex,
     organizations: organizations,
+    mappings: slackIdUsernameMappings,
     personal: personal
 }, Log)
 
@@ -41,6 +43,23 @@ const Slack    = new(require('./lib/slack'))({
     token: SLACK_BOT_TOKEN,
     mappings: slackGithubUsersMappings
 }, Log)
+
+module.exports = {
+    repeat: function(slackId) {
+        const noneMsg = 'There are no PRs pending your review.'
+        var targetUser = Github.mappings[slackId] || null;
+
+        Github.getAllPending(function(err, pendings) {
+            if (err)
+                Log.error("Error ", err);
+            else if (pendings[targetUser]) {
+                Slack.notify(targetUser, pendings[targetUser], function(err, done){});
+            } else {
+                Slack.sendMsg(targetUser, noneMsg);
+            }
+        });
+    }
+}
 
 function pollAndNotify(){
     var now = new Date();
