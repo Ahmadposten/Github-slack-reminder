@@ -71,7 +71,7 @@ function pollAndNotify(){
             Log.error("Error ", err);
         else{
             // Only execute the poller when it's during working hours
-            if (hours > workStart && hours < workEnd && day != 0 && day != 6) {
+            if (hours >= workStart && hours < workEnd && day != 0 && day != 6) {
                     Object.keys(pendings).map(function(a){
                         Slack.notify(a, pendings[a], function(err, done){});
                     });             
