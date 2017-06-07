@@ -42,8 +42,6 @@ const Slack    = new(require('./lib/slack'))({
 	mappings: slackGithubUsersMappings
 }, Log)
 
-
-
 function pollAndNotify(){
     var now = new Date();
     var hours = now.getHours();
