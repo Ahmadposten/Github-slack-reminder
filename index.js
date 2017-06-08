@@ -22,6 +22,8 @@ var regex			= new RegExp(process.env['REPOS_REGEX'] || '.*');
 var interval		= parseFloat(process.env['INTERVAL']) || 2;
 var organizations   = process.env['ORGANIZATIONS'];
 var personal		= process.env['PERSONAL'];
+var workStart		= process.env['WORK_START'] || 9;
+var workEnd			= process.env['WORK_END'] || 17;
 
 personal = personal && personal.toLowerCase() === 'true' ? true : false;
 organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
@@ -40,20 +42,26 @@ const Slack    = new(require('./lib/slack'))({
 	mappings: slackGithubUsersMappings
 }, Log)
 
-
-
 function pollAndNotify(){
-	Github.getAllPending(function(err, pendings){
-		if(err)
-			Log.error("Error ", err);
-		else{
-			Object.keys(pendings).map(function(a){
-				Slack.notify(a, pendings[a], function(err, done){});
-			});
+    var now = new Date();
+    var hours = now.getHours();
+    var day = now.getDay();
 
-			setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
-		}
-	});
+    Github.getAllPending(function(err, pendings){
+        if(err)
+            Log.error("Error ", err);
+        else{
+            // Only execute the poller when it's during working hours
+            if (hours >= workStart && hours < workEnd && day != 0 && day != 6) {
+                    Object.keys(pendings).map(function(a){
+                        Slack.notify(a, pendings[a], function(err, done){});
+                    });             
+                setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
+            } else {
+                console.log('All work and no play makes Jack a dull boy.');
+            }
+        }
+    });
 }
 
-pollAndNotify()
+pollAndNotify();

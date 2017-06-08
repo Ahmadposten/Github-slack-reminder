@@ -24,6 +24,9 @@ parameters are configured via environment variables.
 | ORGANIZATIONS                                      | A comma seperated strings of organizations you want to watch         defaults to empty string  | String               |
 | PERSONAL                                           | Whether to watch personal repos                                       defaults to false        | Boolean              |
 | CONFIG_PATH                                        | The folder containing the configuration files such as mappings.json defaults to ./             | String               |
+| WORK_START                                        | Sets a custom work starting time, bot will not be active before this (ex: 8 = 8AM) defaults to 9             | Integer               |
+| WORK_END                                        | Sets a custom work end time, bot will not be active before this (ex: 18 = 6PM) defaults to 17             | Integer               |
+
 
 
 ### Mappings file
