@@ -59,6 +59,9 @@ function pollAndNotify(){
                 setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
             } else {
                 console.log('All work and no play makes Jack a dull boy.');
+
+                // Polls every 15 min to check if we're back in work hours
+                setTimeout(pollAndNotify, interval * 60 * 7500);                
             }
         }
     });
