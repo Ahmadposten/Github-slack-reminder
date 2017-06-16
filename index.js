@@ -17,15 +17,15 @@ if(!SLACK_BOT_TOKEN || SLACK_BOT_TOKEN.length == 0){
   process.exit()
 }
 
-var CONFIG_PATH     = process.env['CONFIG_PATH'] || './';
-var regex			= new RegExp(process.env['REPOS_REGEX'] || '.*');
-var interval		= parseFloat(process.env['INTERVAL']) || 2;
-var organizations   = process.env['ORGANIZATIONS'];
-var personal		= process.env['PERSONAL'];
-var workStart		= process.env['WORK_START'] || 9;
-var workEnd			= process.env['WORK_END'] || 17;
+var CONFIG_PATH   = process.env['CONFIG_PATH'] || './';
+var regex         = new RegExp(process.env['REPOS_REGEX'] || '.*');
+var interval      = parseFloat(process.env['INTERVAL']) || 2;
+var organizations = process.env['ORGANIZATIONS'];
+var personal      = process.env['PERSONAL'];
+var workStart     = process.env['WORK_START'] || 9;
+var workEnd       = process.env['WORK_END'] || 17;
 
-personal = personal && personal.toLowerCase() === 'true' ? true : false;
+personal      = personal && personal.toLowerCase() === 'true' ? true : false;
 organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
 
 var slackGithubUsersMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
@@ -55,13 +55,13 @@ function pollAndNotify(){
             if (hours >= workStart && hours < workEnd && day != 0 && day != 6) {
                     Object.keys(pendings).map(function(a){
                         Slack.notify(a, pendings[a], function(err, done){});
-                    });             
+                    });
                 setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
             } else {
                 console.log('All work and no play makes Jack a dull boy.');
 
                 // Polls every 15 min to check if we're back in work hours
-                setTimeout(pollAndNotify, interval * 60 * 7500);                
+                setTimeout(pollAndNotify, interval * 60 * 7500);
             }
         }
     });
