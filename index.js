@@ -28,7 +28,13 @@ var workEnd       = process.env['WORK_END'] || 17;
 personal      = personal && personal.toLowerCase() === 'true' ? true : false;
 organizations = organizations && organizations.length > 0 ? organizations.split(',') : [];
 
-var slackGithubUsersMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
+try {
+  var mappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
+
+}catch(e){
+  var mappings = {};
+}
+// var slackGithubUsersMappings = JSON.parse(Fs.readFileSync(Path.join(CONFIG_PATH, 'mappings.json')));
 
 const Github   = new (require('./lib/github'))({
 	token: GITHUB_TOKEN,
@@ -39,7 +45,7 @@ const Github   = new (require('./lib/github'))({
 
 const Slack    = new(require('./lib/slack'))({
 	token: SLACK_BOT_TOKEN,
-	mappings: slackGithubUsersMappings
+	mappings: mappings //slackGithubUsersMappings
 }, Log)
 
 function pollAndNotify(){
@@ -51,18 +57,22 @@ function pollAndNotify(){
         if(err)
             Log.error("Error ", err);
         else{
-            // Only execute the poller when it's during working hours
-            if (hours >= workStart && hours < workEnd && day != 0 && day != 6) {
-                    Object.keys(pendings).map(function(a){
-                        Slack.notify(a, pendings[a], function(err, done){});
-                    });
-                setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
-            } else {
-                console.log('All work and no play makes Jack a dull boy.');
+          // Only execute the poller when it's during working hours
+          if (hours >= workStart && hours < workEnd && day != 0 && day != 6) {
+            Object.keys(pendings.pendingUsersRequests).map(function(a){
+              Slack.notify_individual(a, pendings.pendingUsersRequests[a], function(err, done){});
+            });
 
-                // Polls every 15 min to check if we're back in work hours
-                setTimeout(pollAndNotify, interval * 60 * 7500);
-            }
+            Slack.notify_channels(pendings.pendingPullRequestsUsers,
+              function(err, done){});
+
+            setTimeout(pollAndNotify, interval * 60 * 60 * 1000);
+          } else {
+            console.log('All work and no play makes Jack a dull boy.');
+
+            // Polls every 15 min to check if we're back in work hours
+            setTimeout(pollAndNotify, interval * 60 * 7500);
+          }
         }
     });
 }
