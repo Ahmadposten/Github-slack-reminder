@@ -37,16 +37,17 @@ or by default in the root directory of the project.
 
 example mapping.json
 
-```
-  {
-    "individual_mappings": {
-      "john1": "@john",
-      "marry": "@maria"
-    },
-    "channels": {
-      "#ios-team": ".*ios.*"
-    }
+
+```json
+{
+  "individual_mappings": {
+    "john1": "@john",
+    "marry": "@maria"
+  },
+  "channels": {
+    "#ios-team": ".*ios.*"
   }
+}
 ```
 where the key is the github username and the value is the slack username with a `@`. It can also be a channel if you replace the `@` by a `#`
 
