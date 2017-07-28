@@ -4,6 +4,8 @@ At work you get lot's of review requests everyday that it becomes very hard to k
 
 This little application monitors github repos for new pull requests and sends reminders periodically with an aggregation of the pull requests assigned to every person.
 
+It also supports using social pressure by sending reports to specific channels listing the pull requests and people late on their reviews.
+
 ## Installation and usage
 ```
 git clone https://github.com/Ahmadposten/Github-slack-reminder.git
@@ -30,15 +32,20 @@ parameters are configured via environment variables.
 
 
 ### Mappings file
-You will need a mapping.json file which contains mappings between github usernames and slack usernames. The file location is specified in the `CONFIG_PATH` environment variable
+You will need a mapping.json file which contains mappings between github usernames and slack usernames as well as channels to their watched repos (regex matching). The file location is specified in the `CONFIG_PATH` environment variable
 or by default in the root directory of the project.
 
 example mapping.json
 
 ```
   {
-    "john1": "@john",
-    "marry": "@maria"
+    "individual_mappings": {
+      "john1": "@john",
+      "marry": "@maria"
+    },
+    "channels": {
+      "#ios-team": ".*ios.*"
+    }
   }
 ```
 where the key is the github username and the value is the slack username with a `@`. It can also be a channel if you replace the `@` by a `#`
